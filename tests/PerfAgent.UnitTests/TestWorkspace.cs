@@ -27,7 +27,8 @@ public sealed class TestWorkspace : IDisposable
 
     public PolicyEngine Engine { get; }
 
-    public const string ValidManifest = """
+    // Normalizado a LF: los patrones con "\n" de las pruebas deben coincidir aunque Git extraiga el archivo con CRLF.
+    public static readonly string ValidManifest = """
         schemaVersion: 1
         name: test
         profile: local-isolated
@@ -62,7 +63,7 @@ public sealed class TestWorkspace : IDisposable
           thresholds:
             http_req_failed: ['rate<0.01']
             http_req_duration: ['p(95)<500']
-        """;
+        """.ReplaceLineEndings("\n");
 
     public ManifestValidation Validate(string yaml)
     {

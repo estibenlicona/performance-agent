@@ -12,7 +12,8 @@ namespace PerfAgent.IntegrationTests;
 [Trait("Category", "Integration")]
 public sealed class PolicyAndCleanupTests : IAsyncLifetime
 {
-    private const string Base = """
+    // Normalizado a LF: los patrones con "\n" de las pruebas deben coincidir aunque Git extraiga el archivo con CRLF.
+    private static readonly string Base = """
         schemaVersion: 1
         profile: local-isolated
         environment: lab
@@ -35,7 +36,7 @@ public sealed class PolicyAndCleanupTests : IAsyncLifetime
             executor: constant-vus
             vus: 4
             duration: 6s
-        """;
+        """.ReplaceLineEndings("\n");
 
     private readonly TempLabWorkspace _ws = new();
     private LabService _lab = null!;
