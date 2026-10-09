@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "dotnet-diagnostics-mcp": {
+      "version": "0.28.0",
+      "commands": [
+        "dotnet-diagnostics-mcp"
+      ],
+      "rollForward": false
+    }
+  }
+}

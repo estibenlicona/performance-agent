@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://perf-lab.local/schemas/run-manifest.v1.schema.json",
+  "title": "Manifiesto de ejecución perf-lab (v1)",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "description": "Versión del esquema del manifiesto. Solo se admite 1.",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Nombre corto del escenario.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "profile": {
+      "description": "Perfil de ambiente: local-isolated o local-hybrid.",
+      "type": "string",
+      "enum": [
+        "local-isolated",
+        "local-hybrid"
+      ]
+    },
+    "environment": {
+      "description": "Etiqueta del ambiente objetivo (lab, dev, test...). Producción está prohibida.",
+      "type": "string"
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "description": "Ruta relativa al workspace del .csproj de la API.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "configuration": {
+          "description": "Solo Release en el MVP.",
+          "type": "string",
+          "enum": [
+            "Release"
+          ]
+        },
+        "framework": {
+          "description": "TargetFramework a usar si el proyecto declara varios.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aspNetCoreEnvironment": {
+          "description": "Valor de ASPNETCORE_ENVIRONMENT para la instancia de laboratorio.",
+          "type": "string"
+        },
+        "healthPath": {
+          "description": "Ruta de salud usada para readiness.",
+          "type": "string"
+        },
+        "readinessTimeoutSeconds": {
+          "type": "integer"
+        },
+        "openApiPath": {
+          "description": "Ruta del documento OpenAPI (JSON). Si se omite, se infiere por los paquetes del proyecto.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "settings": {
+          "description": "Configuración NO secreta para la instancia (variables de entorno, p. ej. Lab__Faults__Cpu).",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "endpoints": {
+      "description": "Endpoints declarados. Obligatorios si la API no expone OpenAPI.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "GET",
+              "HEAD",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          },
+          "path": {
+            "description": "Ruta relativa (empieza por /). Nunca una URL absoluta.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "expectedStatus": {
+            "type": "integer"
+          },
+          "bodyContains": {
+            "description": "Texto que debe contener la respuesta (validación funcional mínima).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "weight": {
+            "type": "integer"
+          },
+          "pathParameters": {
+            "description": "Valores sintéticos para parámetros de ruta {nombre}.",
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "body": {
+            "description": "Cuerpo JSON sintético (solo escrituras autorizadas).",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "load": {
+      "type": "object",
+      "properties": {
+        "engine": {
+          "type": "string",
+          "enum": [
+            "k6"
+          ]
+        },
+        "endpointSource": {
+          "description": "Origen de endpoints: auto (OpenAPI si existe, si no declarados), openapi o declared.",
+          "type": "string",
+          "enum": [
+            "auto",
+            "openapi",
+            "declared"
+          ]
+        },
+        "include": {
+          "description": "Si se indica, solo se prueban estos endpoints (por nombre o ruta).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "smoke": {
+          "type": "object",
+          "properties": {
+            "vus": {
+              "type": "integer"
+            },
+            "iterations": {
+              "description": "Iteraciones totales del smoke test.",
+              "type": "integer"
+            },
+            "maxDuration": {
+              "description": "Duración máxima (formato k6: 30s, 1m).",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "baseline": {
+          "type": "object",
+          "properties": {
+            "executor": {
+              "type": "string",
+              "enum": [
+                "constant-vus",
+                "ramping-vus"
+              ]
+            },
+            "vus": {
+              "type": "integer"
+            },
+            "duration": {
+              "description": "Duración de la carga sostenida (formato k6: 30s, 2m).",
+              "type": "string"
+            },
+            "rampUp": {
+              "description": "Rampa de subida (solo ramping-vus).",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "thresholds": {
+          "description": "Thresholds de k6 por métrica, p. ej. http_req_duration: ['p(95)<500'].",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "dependencies": {
+      "description": "Dependencias por nombre.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "container",
+              "mock",
+              "remote",
+              "unavailable"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "injectAs": {
+            "description": "Clave de configuración de la API que recibe la URL de la dependencia (p. ej. Dependencies__Pricing__BaseUrl).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "contract": {
+            "description": "mock: ruta del contrato JSON del simulador.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "description": "remote: URL base autorizada (sin credenciales).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "healthPath": {
+            "description": "remote/container: ruta de salud a comprobar.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authentication": {
+            "type": "string",
+            "enum": [
+              "none",
+              "developer-credential"
+            ]
+          },
+          "composeFile": {
+            "description": "container: archivo docker compose relativo al workspace.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "service": {
+            "description": "container: servicio del compose.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "port": {
+            "description": "container: puerto publicado en loopback.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "data": {
+            "description": "Datos de la dependencia: synthetic (único valor admitido en el MVP).",
+            "type": "string",
+            "enum": [
+              "synthetic"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "properties": {
+        "runtimeCounters": {
+          "type": "boolean"
+        },
+        "counterIntervalSeconds": {
+          "description": "Intervalo de muestreo de counters en segundos.",
+          "type": "integer"
+        },
+        "cpuTrace": {
+          "type": "string",
+          "enum": [
+            "on-demand",
+            "disabled"
+          ]
+        },
+        "memoryDump": {
+          "description": "Dumps de memoria: deshabilitados en el MVP.",
+          "type": "string",
+          "enum": [
+            "disabled"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "safety": {
+      "type": "object",
+      "properties": {
+        "productionTargets": {
+          "type": "string",
+          "enum": [
+            "deny"
+          ]
+        },
+        "writeOperations": {
+          "type": "string",
+          "enum": [
+            "deny",
+            "allow-declared"
+          ]
+        },
+        "secretsInModelContext": {
+          "type": "string",
+          "enum": [
+            "deny"
+          ]
+        },
+        "requireConfirmation": {
+          "description": "Pasos que requieren confirmación explícita (confirm=true) antes de ejecutarse, p. ej. [baseline].",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/lab/">
+    <Project Path="lab/PerfLab.Api/PerfLab.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PerfAgent.Adapters.DotNetDiagnosticsMcp/PerfAgent.Adapters.DotNetDiagnosticsMcp.csproj" />
+    <Project Path="src/PerfAgent.Adapters.K6Mcp/PerfAgent.Adapters.K6Mcp.csproj" />
+    <Project Path="src/PerfAgent.Adapters.Process/PerfAgent.Adapters.Process.csproj" />
+    <Project Path="src/PerfAgent.Core/PerfAgent.Core.csproj" />
+    <Project Path="src/PerfAgent.Mcp/PerfAgent.Mcp.csproj" />
+    <Project Path="src/PerfAgent.MockServer/PerfAgent.MockServer.csproj" />
+    <Project Path="src/PerfAgent.Reporting/PerfAgent.Reporting.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PerfAgent.IntegrationTests/PerfAgent.IntegrationTests.csproj" />
+    <Project Path="tests/PerfAgent.UnitTests/PerfAgent.UnitTests.csproj" />
+  </Folder>
+</Solution>

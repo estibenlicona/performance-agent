@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# Fallo conocido: asignaciones excesivas por petición (buffers LOH temporales y concatenación cuadrática de
+# cadenas, Lab:Faults:Allocations). Síntoma esperado: tasa de asignación y GCs gen2 elevados; el muestreo de
+# asignaciones señala PerfLab.Api.AllocationReportService.BuildReportWithExcessiveAllocations.
+schemaVersion: 1
+name: lab-alloc
+profile: local-isolated
+environment: lab
+
+api:
+  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  healthPath: /health
+  settings:
+    Lab__Faults__Allocations: "true"
+
+endpoints:
+  - name: alloc-report
+    method: GET
+    path: /api/alloc/report
+    expectedStatus: 200
+    bodyContains: checksum
+
+load:
+  endpointSource: declared
+  smoke:
+    vus: 1
+    iterations: 10
+    maxDuration: 30s
+  baseline:
+    executor: constant-vus
+    vus: 8
+    duration: 20s

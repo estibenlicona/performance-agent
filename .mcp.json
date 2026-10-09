@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "perf-lab": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "src/PerfAgent.Mcp/PerfAgent.Mcp.csproj",
+        "--configuration",
+        "Release",
+        "--no-launch-profile"
+      ],
+      "env": {
+        "DOTNET_NOLOGO": "1",
+        "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+      },
+      "tools": [
+        "*"
+      ],
+      "timeout": 600000
+    }
+  }
+}

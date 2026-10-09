@@ -1,0 +1,19 @@
+## Build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+
+## Herramientas descargadas por eng/bootstrap (binarios fijados por versión y checksum)
+.tools/
+
+## Artefactos de ejecución del laboratorio (informes, scripts k6 generados, logs saneados, trazas)
+artifacts/
+
+## Secretos locales: nunca versionar
+*.env
+.env.*
+appsettings.*.local.json
+secrets/

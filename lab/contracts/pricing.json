@@ -1,0 +1,29 @@
+{
+  "name": "pricing-api",
+  "version": 1,
+  "description": "Mock declarado de la API de precios usada por PerfLab.Api. Datos sintéticos.",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/prices/{id}",
+      "status": 200,
+      "body": { "id": 1, "price": 12.5 },
+      "latencyMs": { "min": 30, "max": 50 },
+      "errorRate": 0.0,
+      "errorStatus": 503
+    },
+    {
+      "method": "GET",
+      "path": "/prices",
+      "status": 200,
+      "body": [
+        { "id": 1, "price": 12.5 },
+        { "id": 2, "price": 7.25 },
+        { "id": 3, "price": 3.1 }
+      ],
+      "latencyMs": { "min": 35, "max": 55 },
+      "errorRate": 0.0,
+      "errorStatus": 503
+    }
+  ]
+}

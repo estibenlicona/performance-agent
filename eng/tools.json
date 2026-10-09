@@ -1,0 +1,35 @@
+{
+  "$comment": "Versiones fijadas de herramientas externas. Actualizar solo tras repetir las pruebas de contrato (tests/PerfAgent.IntegrationTests). Ver docs/providers.md.",
+  "k6": {
+    "version": "2.3.0",
+    "repository": "https://github.com/grafana/k6",
+    "license": "AGPL-3.0",
+    "assets": {
+      "windows-amd64": {
+        "url": "https://github.com/grafana/k6/releases/download/v2.3.0/k6-v2.3.0-windows-amd64.zip",
+        "sha256": "112276d495e5741c968e2bc09ea6196099c1275bd6db9ee0875d173c7148ce43",
+        "executable": "k6-v2.3.0-windows-amd64/k6.exe"
+      }
+    },
+    "checksums": "https://github.com/grafana/k6/releases/download/v2.3.0/k6-v2.3.0-checksums.txt"
+  },
+  "mcpK6": {
+    "version": "0.7.0",
+    "repository": "https://github.com/grafana/mcp-k6",
+    "license": "AGPL-3.0",
+    "assets": {
+      "windows-amd64": {
+        "url": "https://github.com/grafana/mcp-k6/releases/download/v0.7.0/mcp-k6_0.7.0_windows_amd64.zip",
+        "sha256": "1a1f83b488fe81f4ccc403fbad5b4ac8cd9df16ab2266074c556aee104d21901",
+        "executable": "mcp-k6.exe"
+      }
+    },
+    "checksums": "https://github.com/grafana/mcp-k6/releases/download/v0.7.0/mcp-k6_0.7.0_checksums.txt"
+  },
+  "dotnetDiagnosticsMcp": {
+    "version": "0.28.0",
+    "repository": "https://github.com/pedrosakuma/dotnet-diagnostics",
+    "license": "MIT",
+    "install": "dotnet tool restore (manifiesto local .config/dotnet-tools.json)"
+  }
+}

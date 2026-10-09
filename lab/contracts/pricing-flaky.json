@@ -1,0 +1,29 @@
+{
+  "name": "pricing-api-flaky",
+  "version": 1,
+  "description": "Variante del mock de precios con errores intermitentes (5%) para el escenario de dependencia con errores.",
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/prices/{id}",
+      "status": 200,
+      "body": { "id": 1, "price": 12.5 },
+      "latencyMs": { "min": 30, "max": 50 },
+      "errorRate": 0.05,
+      "errorStatus": 503
+    },
+    {
+      "method": "GET",
+      "path": "/prices",
+      "status": 200,
+      "body": [
+        { "id": 1, "price": 12.5 },
+        { "id": 2, "price": 7.25 },
+        { "id": 3, "price": 3.1 }
+      ],
+      "latencyMs": { "min": 35, "max": 55 },
+      "errorRate": 0.05,
+      "errorStatus": 503
+    }
+  ]
+}

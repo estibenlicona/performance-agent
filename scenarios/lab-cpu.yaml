@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# Fallo conocido: trabajo de CPU innecesario en cada petición (Lab:Faults:Cpu).
+# Síntoma esperado: p95 se degrada con concurrencia, CPU del proceso alta; la muestra de CPU
+# señala PerfLab.Api.CpuReportService.CountPrimesNaive.
+schemaVersion: 1
+name: lab-cpu
+profile: local-isolated
+environment: lab
+
+api:
+  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  healthPath: /health
+  openApiPath: /openapi/v1.json
+  settings:
+    Lab__Faults__Cpu: "true"
+
+load:
+  endpointSource: openapi
+  include: [GetCpuReport]
+  smoke:
+    vus: 1
+    iterations: 10
+    maxDuration: 30s
+  baseline:
+    executor: constant-vus
+    vus: 16
+    duration: 20s
+  thresholds:
+    http_req_failed: ['rate<0.01']
+
+diagnostics:
+  cpuTrace: on-demand

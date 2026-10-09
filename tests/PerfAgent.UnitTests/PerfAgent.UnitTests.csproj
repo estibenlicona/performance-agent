@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>PerfAgent.UnitTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PerfAgent.Core\PerfAgent.Core.csproj" />
+    <ProjectReference Include="..\..\src\PerfAgent.Adapters.K6Mcp\PerfAgent.Adapters.K6Mcp.csproj" />
+    <ProjectReference Include="..\..\src\PerfAgent.Adapters.DotNetDiagnosticsMcp\PerfAgent.Adapters.DotNetDiagnosticsMcp.csproj" />
+    <ProjectReference Include="..\..\src\PerfAgent.Adapters.Process\PerfAgent.Adapters.Process.csproj" />
+    <ProjectReference Include="..\..\src\PerfAgent.Reporting\PerfAgent.Reporting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fixtures\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

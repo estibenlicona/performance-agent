@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>PerfAgent.Adapters.DotNetDiagnosticsMcp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PerfAgent.Core\PerfAgent.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="PerfAgent.UnitTests" />
+    <InternalsVisibleTo Include="PerfAgent.IntegrationTests" />
+  </ItemGroup>
+
+</Project>
