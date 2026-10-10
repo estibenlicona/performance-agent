@@ -4,7 +4,7 @@
 #   dependencies:
 #     pricing-api:
 #       mode: container
-#       composeFile: lab/docker-compose.yml
+#       composeFile: dotnet/lab/docker-compose.yml
 #       service: pricing-mock
 #       port: 18081
 #       injectAs: Dependencies__Pricing__BaseUrl

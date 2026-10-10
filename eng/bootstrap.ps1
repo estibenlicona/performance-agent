@@ -83,4 +83,4 @@ finally {
 }
 
 Write-Host ''
-Write-Host 'Herramientas listas. Siguiente paso: dotnet build PerfAgent.slnx -c Release'
+Write-Host 'Herramientas listas. Siguiente paso: dotnet build dotnet/PerfAgent.slnx -c Release'

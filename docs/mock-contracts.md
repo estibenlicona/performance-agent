@@ -1,7 +1,7 @@
 # Contratos de mocks (`mode: mock`)
 
 Un mock declarado sustituye a una dependencia HTTP **que está fuera del objetivo de la medición**. El informe lo marca
-como **simulado** y limita las conclusiones a la API con ese comportamiento. Lo sirve `src/PerfAgent.MockServer`,
+como **simulado** y limita las conclusiones a la API con ese comportamiento. Lo sirve `dotnet/src/PerfAgent.MockServer`,
 lanzado por el laboratorio en un puerto libre de 127.0.0.1; su URL se inyecta en la API con `injectAs`.
 
 ## Formato (JSON, versionado junto al manifiesto)

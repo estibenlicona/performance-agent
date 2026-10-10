@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Fallo conocido: asignaciones excesivas por petición (buffers LOH temporales y concatenación cuadrática de
 # cadenas, Lab:Faults:Allocations). Síntoma esperado: tasa de asignación y GCs gen2 elevados; el muestreo de
 # asignaciones señala PerfLab.Api.AllocationReportService.BuildReportWithExcessiveAllocations.
@@ -8,7 +8,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   settings:
     Lab__Faults__Allocations: "true"

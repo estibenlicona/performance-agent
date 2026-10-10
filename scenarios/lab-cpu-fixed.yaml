@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Validación del "arreglo" del fallo de CPU: mismo escenario y carga que lab-cpu.yaml, con el fallo desactivado
 # (el resultado se calcula una vez y se reutiliza). Compara ambas ejecuciones con perf-lab/compare_runs:
 # deben ser comparables (mismo escenario, carga, perfil y máquina) y el p95 debe mejorar.
@@ -8,7 +8,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   openApiPath: /openapi/v1.json
   settings:

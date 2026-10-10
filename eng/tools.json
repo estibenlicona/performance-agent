@@ -1,5 +1,5 @@
 {
-  "$comment": "Versiones fijadas de herramientas externas. Actualizar solo tras repetir las pruebas de contrato (tests/PerfAgent.IntegrationTests). Ver docs/providers.md.",
+  "$comment": "Versiones fijadas de herramientas externas. Actualizar solo tras repetir las pruebas de contrato (dotnet/tests/PerfAgent.IntegrationTests). Ver docs/providers.md.",
   "k6": {
     "version": "2.3.0",
     "repository": "https://github.com/grafana/k6",

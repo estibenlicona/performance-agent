@@ -10,11 +10,11 @@ namespace PerfAgent.Core.Manifest;
 
 /// <summary>
 /// Genera el JSON Schema del manifiesto a partir de los tipos C# (fuente de verdad), con descripciones y valores
-/// permitidos. El archivo versionado <c>schemas/run-manifest.v1.schema.json</c> se comprueba en las pruebas.
+/// permitidos. El archivo versionado <c>scenarios/run-manifest.v1.schema.json</c> se comprueba en las pruebas.
 /// </summary>
 public static class ManifestSchema
 {
-    public const string RelativePath = "schemas/run-manifest.v1.schema.json";
+    public const string RelativePath = "scenarios/run-manifest.v1.schema.json";
 
     public static string Generate()
     {

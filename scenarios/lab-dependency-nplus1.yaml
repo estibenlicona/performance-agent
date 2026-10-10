@@ -1,6 +1,6 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Fallo conocido: N+1 contra una dependencia lenta (Lab:Faults:DependencyNPlusOne). La dependencia de precios
-# es un MOCK declarado (contrato lab/contracts/pricing.json, latencia 30–50 ms): el informe la marca como
+# es un MOCK declarado (contrato dotnet/lab/contracts/pricing.json, latencia 30–50 ms): el informe la marca como
 # simulada. Síntoma esperado: latencia alta incluso con 1 VU, CPU baja; las estadísticas del mock muestran
 # 5 llamadas secuenciales por petición que explican la latencia.
 schemaVersion: 1
@@ -9,7 +9,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   settings:
     Lab__Faults__DependencyNPlusOne: "true"
@@ -25,7 +25,7 @@ dependencies:
   pricing-api:
     mode: mock
     required: true
-    contract: lab/contracts/pricing.json
+    contract: dotnet/lab/contracts/pricing.json
     injectAs: Dependencies__Pricing__BaseUrl
 
 load:

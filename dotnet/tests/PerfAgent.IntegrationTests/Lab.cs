@@ -47,11 +47,11 @@ public static class Repo
     }
 
     public static IConfiguration BuildConfiguration(string workspaceRoot) => new ConfigurationBuilder()
-        .AddJsonFile(Path.Combine(Root, "src", "PerfAgent.Mcp", "appsettings.json"))
+        .AddJsonFile(Path.Combine(Root, "dotnet", "src", "PerfAgent.Mcp", "appsettings.json"))
         .AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["PerfLab:WorkspaceRoot"] = workspaceRoot,
-            ["PerfLab:MockServerProject"] = Path.Combine(Root, "src", "PerfAgent.MockServer", "PerfAgent.MockServer.csproj"),
+            ["PerfLab:MockServerProject"] = Path.Combine(Root, "dotnet", "src", "PerfAgent.MockServer", "PerfAgent.MockServer.csproj"),
             // El host de pruebas no se asigna a sí mismo al Job Object: los hijos se asignan individualmente.
             ["PerfLab:AssignServerToJobObject"] = "false",
             ["CommunityProviders:K6Mcp:Command"] = McpK6,
@@ -84,7 +84,7 @@ public sealed class TempLabWorkspace : IDisposable
     {
         Root = Path.Combine(Path.GetTempPath(), "perflab-it", Guid.NewGuid().ToString("N")[..10]);
         Directory.CreateDirectory(Path.Combine(Root, "scenarios"));
-        var lab = Path.Combine(Repo.Root, "lab").Replace('\\', '/');
+        var lab = Path.Combine(Repo.Root, "dotnet", "lab").Replace('\\', '/');
         File.WriteAllText(Path.Combine(Root, "perf-lab.policy.json"), $$"""
             {
               "schemaVersion": 1,
@@ -99,7 +99,7 @@ public sealed class TempLabWorkspace : IDisposable
 
     public string Root { get; }
 
-    public string LabProject => Path.Combine(Repo.Root, "lab", "PerfLab.Api", "PerfLab.Api.csproj").Replace('\\', '/');
+    public string LabProject => Path.Combine(Repo.Root, "dotnet", "lab", "PerfLab.Api", "PerfLab.Api.csproj").Replace('\\', '/');
 
     public string WriteManifest(string name, string yaml)
     {

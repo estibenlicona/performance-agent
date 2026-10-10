@@ -5,12 +5,12 @@ rendimiento de APIs ASP.NET Core: descubre la API, la compila y arranca en local
 recoge evidencia del **runtime .NET** en la misma ventana, formula hipótesis con evidencia a favor y en contra, ejecuta
 la investigación de seguimiento más barata que las discrimine y entrega un informe reproducible.
 
-Implementa la **Fase 1 (MVP)** de [`plan_agente_diagnostico_performance_dotnet.md`](plan_agente_diagnostico_performance_dotnet.md).
+Implementa la **Fase 1 (MVP)** de [`docs/plan.md`](docs/plan.md).
 Estado de la puerta MVP → Fase 2: [`docs/mvp-gate.md`](docs/mvp-gate.md).
 
 ## Cómo funciona
 
-- El agente solo ve las herramientas **`perf-lab/*`** de un servidor MCP propio (`src/PerfAgent.Mcp`). Ese servidor
+- El agente solo ve las herramientas **`perf-lab/*`** de un servidor MCP propio (`dotnet/src/PerfAgent.Mcp`). Ese servidor
   aplica la política de seguridad (`perf-lab.policy.json`) y delega en proveedores comunitarios fijados por versión,
   que el agente no puede invocar directamente:
   - [`grafana/mcp-k6`](https://github.com/grafana/mcp-k6) 0.7.0 + k6 2.3.0 — validación y ejecución de escenarios.
@@ -34,9 +34,9 @@ Estado de la puerta MVP → Fase 2: [`docs/mvp-gate.md`](docs/mvp-gate.md).
 powershell -ExecutionPolicy Bypass -File eng/bootstrap.ps1
 
 # 2. Compilar y probar
-dotnet build PerfAgent.slnx
-dotnet test tests/PerfAgent.UnitTests
-dotnet test tests/PerfAgent.IntegrationTests      # proveedores reales y escenarios E2E (≈7 min)
+dotnet build dotnet/PerfAgent.slnx
+dotnet test dotnet/tests/PerfAgent.UnitTests
+dotnet test dotnet/tests/PerfAgent.IntegrationTests      # proveedores reales y escenarios E2E (≈7 min)
 ```
 
 3. Abre la carpeta en VS Code. El servidor `perf-lab` está declarado en [`.mcp.json`](.mcp.json); confía en el
@@ -47,9 +47,9 @@ dotnet test tests/PerfAgent.IntegrationTests      # proveedores reales y escenar
 Sin Copilot (utilidad de pruebas):
 
 ```powershell
-dotnet run --project src/PerfAgent.Mcp -- status
-dotnet run --project src/PerfAgent.Mcp -- diagnose scenarios/lab-blocking.yaml
-dotnet run --project src/PerfAgent.Mcp -- report <runId>      # recalcula el informe desde los artefactos
+dotnet run --project dotnet/src/PerfAgent.Mcp -- status
+dotnet run --project dotnet/src/PerfAgent.Mcp -- diagnose scenarios/lab-blocking.yaml
+dotnet run --project dotnet/src/PerfAgent.Mcp -- report <runId>      # recalcula el informe desde los artefactos
 ```
 
 Los resultados quedan en `artifacts/runs/<runId>/` (`report.md`, `report.json`, `run.json`, scripts k6, respuestas
@@ -59,7 +59,7 @@ saneadas de los proveedores y logs).
 
 1. Añade la ruta del proyecto a `allowedProjectRoots` en `perf-lab.policy.json`.
 2. Crea un manifiesto en `scenarios/` (guía: [`docs/manifest.md`](docs/manifest.md); esquema:
-   `schemas/run-manifest.v1.schema.json`). Declara endpoints con datos sintéticos si no hay OpenAPI y cada dependencia
+   `scenarios/run-manifest.v1.schema.json`). Declara endpoints con datos sintéticos si no hay OpenAPI y cada dependencia
    con su modo (`mock`, `container`, `remote`).
 3. Pide al agente que lo valide y ejecute. Los secretos se configuran fuera del repositorio (user-secrets/entorno).
 
@@ -84,12 +84,12 @@ saneadas de los proveedores y logs).
 .mcp.json                 servidor MCP del workspace (solo perf-lab)
 perf-lab.policy.json      límites de seguridad
 eng/                      bootstrap y versiones fijadas (tools.json)
-src/PerfAgent.*           Core, Mcp (fachada), Adapters (Process, K6Mcp, DotNetDiagnosticsMcp), Reporting, MockServer
-lab/                      API de laboratorio con fallos conocidos, contratos de mocks, docker-compose (no probado)
-scenarios/                manifiestos de ejemplo
-schemas/                  JSON Schema del manifiesto
-tests/                    pruebas unitarias e integración
-docs/                     alcance, política, arquitectura, proveedores, reglas, ADRs, puerta MVP
+dotnet/                   todo el código .NET: PerfAgent.slnx, Directory.Build.props, Directory.Packages.props
+  src/PerfAgent.*         Core, Mcp (fachada), Adapters (Process, K6Mcp, DotNetDiagnosticsMcp), Reporting, MockServer
+  lab/                    API de laboratorio con fallos conocidos, contratos de mocks, docker-compose (no probado)
+  tests/                  pruebas unitarias e integración
+scenarios/                manifiestos de ejemplo y su JSON Schema
+docs/                     plan, alcance, política, arquitectura, proveedores, reglas, ADRs, puerta MVP
 ```
 
 ## Licencias de terceros

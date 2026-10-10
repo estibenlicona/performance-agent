@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PerfAgent.Core.Manifest;
 
 /// <summary>
-/// Manifiesto declarativo de una ejecución (esquema v1, ver <c>schemas/run-manifest.v1.schema.json</c>).
+/// Manifiesto declarativo de una ejecución (esquema v1, ver <c>scenarios/run-manifest.v1.schema.json</c>).
 /// Se escribe en YAML con claves camelCase; los campos desconocidos se rechazan.
 /// </summary>
 public sealed class RunManifest

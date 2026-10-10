@@ -23,7 +23,7 @@ Criterios de la sección 10 del plan, con la evidencia que los respalda. Verific
 
 ## Verificación manual pendiente (criterios 1 y 2)
 
-1. Ejecuta `eng/bootstrap.ps1` y `dotnet build PerfAgent.slnx -c Release`.
+1. Ejecuta `eng/bootstrap.ps1` y `dotnet build dotnet/PerfAgent.slnx -c Release`.
 2. Abre la carpeta en VS Code (1.140+), confía en el workspace y arranca el servidor `perf-lab` (vista MCP o al
    primer uso). Debe listar 17 herramientas.
 3. En Copilot Chat abre un chat nuevo, despliega el selector de agentes y elige **Performance Diagnostics**.

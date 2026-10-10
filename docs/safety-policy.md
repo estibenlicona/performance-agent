@@ -1,7 +1,7 @@
 # Política de seguridad del laboratorio
 
 Entregable del **Paso 1**. Los controles se aplican en el **servidor** `perf-lab` (código en
-`src/PerfAgent.Core/Policy`, `src/PerfAgent.Adapters.*` y `src/PerfAgent.Mcp/Lab`). Las instrucciones del agente
+`dotnet/src/PerfAgent.Core/Policy`, `dotnet/src/PerfAgent.Adapters.*` y `dotnet/src/PerfAgent.Mcp/Lab`). Las instrucciones del agente
 los describen, pero **no son un control de seguridad**: aunque el modelo intentara saltárselos, las herramientas
 rechazan la operación y explican por qué (`status: blocked`, `violations[]` con código estable).
 

@@ -1,8 +1,8 @@
 # Manifiestos de ejecución (`scenarios/*.yaml`)
 
-Esquema versionado: `schemas/run-manifest.v1.schema.json` (generado desde `src/PerfAgent.Core/Manifest/RunManifest.cs`
-con `dotnet run --project src/PerfAgent.Mcp -- schema`; una prueba verifica que está al día). En VS Code, la línea
-`# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json` activa autocompletado y validación.
+Esquema versionado: `scenarios/run-manifest.v1.schema.json` (generado desde `dotnet/src/PerfAgent.Core/Manifest/RunManifest.cs`
+con `dotnet run --project dotnet/src/PerfAgent.Mcp -- schema`; una prueba verifica que está al día). En VS Code, la línea
+`# yaml-language-server: $schema=./run-manifest.v1.schema.json` activa autocompletado y validación.
 
 La carga es **estricta**: un campo desconocido o mal escrito es un error, no se ignora.
 

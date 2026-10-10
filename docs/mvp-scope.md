@@ -33,7 +33,7 @@ Entregable del **Paso 1** del plan. Define qué hace perf-lab hoy, con qué lím
 | Endpoints por ejecución | ≤ 20 |
 | Destinos de carga | solo `127.0.0.1` (la instancia iniciada por el laboratorio; k6 bloquea cualquier otra IP o hostname) |
 | Métodos HTTP | `GET`, `HEAD` (escrituras denegadas) |
-| Proyectos | bajo `lab/` (ampliable en `allowedProjectRoots`) |
+| Proyectos | bajo `dotnet/lab/` (ampliable en `allowedProjectRoots`) |
 | Manifiestos | bajo `scenarios/` |
 | Dependencias remotas | ninguna autorizada por defecto (`allowedRemoteDependencyHosts: []`) |
 | Capturas del runtime | counters, muestras de CPU, eventos (GC, ThreadPool, contención, excepciones), ≤ 60 s |

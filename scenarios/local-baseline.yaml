@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Línea base del laboratorio sin fallos activos (perfil local-isolated).
 # Sirve como control: con la carga probada no debería observarse degradación.
 schemaVersion: 1
@@ -8,7 +8,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   configuration: Release
   aspNetCoreEnvironment: Development
   healthPath: /health

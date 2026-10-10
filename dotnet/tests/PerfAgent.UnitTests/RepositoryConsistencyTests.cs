@@ -60,7 +60,7 @@ public sealed partial class RepositoryConsistencyTests
         Assert.Equal(["perf-lab"], servers);
         Assert.False(File.Exists(Path.Combine(Root, ".vscode", "mcp.json")), "No dupliques servidores en .vscode/mcp.json.");
         var perfLab = mcp.RootElement.GetProperty("mcpServers").GetProperty("perf-lab");
-        Assert.Contains("src/PerfAgent.Mcp/PerfAgent.Mcp.csproj", perfLab.GetProperty("args").EnumerateArray().Select(a => a.GetString()));
+        Assert.Contains("dotnet/src/PerfAgent.Mcp/PerfAgent.Mcp.csproj", perfLab.GetProperty("args").EnumerateArray().Select(a => a.GetString()));
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public sealed partial class RepositoryConsistencyTests
     public void PinnedVersionsAgreeAcrossFiles()
     {
         using var tools = JsonDocument.Parse(Read("eng", "tools.json"));
-        using var appsettings = JsonDocument.Parse(Read("src", "PerfAgent.Mcp", "appsettings.json"));
+        using var appsettings = JsonDocument.Parse(Read("dotnet", "src", "PerfAgent.Mcp", "appsettings.json"));
         using var dotnetTools = JsonDocument.Parse(Read(".config", "dotnet-tools.json"));
         var providers = appsettings.RootElement.GetProperty("CommunityProviders");
 
@@ -137,10 +137,10 @@ public sealed partial class RepositoryConsistencyTests
     [Fact]
     public void CommittedManifestSchemaIsUpToDate()
     {
-        var committed = Read("schemas", "run-manifest.v1.schema.json").Replace("\r\n", "\n", StringComparison.Ordinal);
+        var committed = Read("scenarios", "run-manifest.v1.schema.json").Replace("\r\n", "\n", StringComparison.Ordinal);
 
         Assert.True(committed == ManifestSchema.Generate(),
-            "schemas/run-manifest.v1.schema.json está desactualizado: dotnet run --project src/PerfAgent.Mcp -- schema");
+            "scenarios/run-manifest.v1.schema.json está desactualizado: dotnet run --project dotnet/src/PerfAgent.Mcp -- schema");
     }
 
     public static TheoryData<string> ScenarioFiles() =>

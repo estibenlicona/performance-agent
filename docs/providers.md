@@ -19,7 +19,7 @@ saneados, duración, éxito, fallback) en `run.json` y en el informe ("Proveedor
 Al arrancar, la fachada consulta el catálogo real (`tools/list`), comprueba que existen las herramientas requeridas
 y que la versión coincide con la fijada; si no, el proveedor queda **no disponible** con un error explicativo
 (`get_lab_status`). Actualizar una versión = cambiar `eng/tools.json`, `.config/dotnet-tools.json` y
-`src/PerfAgent.Mcp/appsettings.json` (una prueba verifica que coinciden) y repetir las pruebas de integración.
+`dotnet/src/PerfAgent.Mcp/appsettings.json` (una prueba verifica que coinciden) y repetir las pruebas de integración.
 
 ## grafana/mcp-k6 0.7.0
 
@@ -98,6 +98,6 @@ diagnóstico a la vez.
 
 ## Pruebas de contrato
 
-`tests/PerfAgent.IntegrationTests/ProviderContractTests.cs` arranca los proveedores fijados y verifica: catálogo y
+`dotnet/tests/PerfAgent.IntegrationTests/ProviderContractTests.cs` arranca los proveedores fijados y verifica: catálogo y
 versión, parámetros y forma de las respuestas, errores, rechazo de herramientas fuera de la allowlist y que la
 fachada pasa el PID del proceso de laboratorio.

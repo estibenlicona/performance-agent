@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # EJEMPLO de perfil local-hybrid: API local con una dependencia remota real (autorizada y comprobada en el
 # preflight) y otra simulada. No se ejecuta tal cual: el host remoto debe añadirse antes a
 # allowedRemoteDependencyHosts en perf-lab.policy.json y la API debe tener su propia credencial de desarrollo.
@@ -10,7 +10,7 @@ profile: local-hybrid
 environment: dev
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   settings:
     Lab__Faults__DependencyNPlusOne: "false"
@@ -32,7 +32,7 @@ dependencies:
   inventory-api:
     mode: mock
     required: false
-    contract: lab/contracts/pricing.json
+    contract: dotnet/lab/contracts/pricing.json
     injectAs: Dependencies__Inventory__BaseUrl
 
 load:

@@ -1,6 +1,6 @@
 # API de laboratorio y escenarios de fallos conocidos
 
-`lab/PerfLab.Api` es una API mínima con datos sintéticos. Cada fallo se activa **individualmente** por configuración
+`dotnet/lab/PerfLab.Api` es una API mínima con datos sintéticos. Cada fallo se activa **individualmente** por configuración
 (`Lab__Faults__<Fallo>=true` en `api.settings` del manifiesto) y está acotado (iteraciones, bytes y esperas máximas;
 timeout de petición de 10 s) para que ninguna prueba cuelgue ni consuma recursos sin límite.
 
@@ -15,13 +15,13 @@ timeout de petición de 10 s) para que ninguna prueba cuelgue ni consuma recurso
 | `POST /api/orders` | — | escritura sintética acotada (la política la excluye por defecto) | — |
 | `GET /health`, `GET /openapi/v1.json` | — | readiness y OpenAPI | — |
 
-La dependencia de precios es un **mock declarado** (`lab/contracts/pricing.json`, 30–50 ms; variante con 5% de 503
+La dependencia de precios es un **mock declarado** (`dotnet/lab/contracts/pricing.json`, 30–50 ms; variante con 5% de 503
 en `pricing-flaky.json`). Sin URL configurada, la API usa una simulación en proceso.
 
 ## Resultados esperados y verificados
 
-Ejecutados con `dotnet run --project src/PerfAgent.Mcp -- diagnose <manifiesto>` (y en
-`tests/PerfAgent.IntegrationTests/LabEndToEndTests.cs`) en Windows 11 x64, 4 núcleos, .NET 10.0.12, k6 2.3.0 vía
+Ejecutados con `dotnet run --project dotnet/src/PerfAgent.Mcp -- diagnose <manifiesto>` (y en
+`dotnet/tests/PerfAgent.IntegrationTests/LabEndToEndTests.cs`) en Windows 11 x64, 4 núcleos, .NET 10.0.12, k6 2.3.0 vía
 grafana/mcp-k6 0.7.0, dotnet-diagnostics 0.28.0. Los valores varían entre ejecuciones; lo que se verifica es el
 veredicto y la evidencia.
 

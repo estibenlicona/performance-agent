@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Fallo conocido: trabajo de CPU innecesario en cada petición (Lab:Faults:Cpu).
 # Síntoma esperado: p95 se degrada con concurrencia, CPU del proceso alta; la muestra de CPU
 # señala PerfLab.Api.CpuReportService.CountPrimesNaive.
@@ -8,7 +8,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   openApiPath: /openapi/v1.json
   settings:

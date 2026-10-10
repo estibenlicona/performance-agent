@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../schemas/run-manifest.v1.schema.json
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
 # Fallo conocido: espera síncrona sobre una operación asíncrona (sync-over-async) en la ruta de la petición
 # (Lab:Faults:Blocking). Síntoma esperado: latencia muy superior a la espera simulada bajo concurrencia,
 # CPU baja, cola del ThreadPool y ajustes por starvation; la muestra de pilas señala Task.Wait desde
@@ -9,7 +9,7 @@ profile: local-isolated
 environment: lab
 
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   settings:
     Lab__Faults__Blocking: "true"

@@ -22,7 +22,7 @@ description: Procedimiento para diagnosticar el rendimiento de APIs ASP.NET Core
 | Proyecto nuevo | `discover_api`; propone un manifiesto con endpoints GET de datos sintéticos |
 | Sin OpenAPI | Declara `endpoints` en el manifiesto (con `pathParameters` sintéticos) |
 | Operaciones de escritura | Excluidas por defecto. Requieren `writeOperations: allow-declared` en la política Y en el manifiesto |
-| Dependencia HTTP fuera del objetivo de la medición | `mode: mock` con un contrato en `lab/contracts/` |
+| Dependencia HTTP fuera del objetivo de la medición | `mode: mock` con un contrato en `dotnet/lab/contracts/` |
 | Dependencia que debe ser real | Perfil `local-hybrid`, `mode: remote`, host en `allowedRemoteDependencyHosts` |
 | Smoke con fallos sistemáticos | Para y corrige escenario/datos: es un problema funcional |
 
@@ -59,7 +59,7 @@ Trampas conocidas:
 
 ## Manifiestos (scenarios/*.yaml)
 
-Campos principales (esquema completo en `schemas/run-manifest.v1.schema.json`, guía en `docs/manifest.md`):
+Campos principales (esquema completo en `scenarios/run-manifest.v1.schema.json`, guía en `docs/manifest.md`):
 
 ```yaml
 schemaVersion: 1
@@ -67,13 +67,13 @@ name: mi-escenario
 profile: local-isolated          # o local-hybrid
 environment: lab                 # nunca prod/production
 api:
-  project: lab/PerfLab.Api/PerfLab.Api.csproj
+  project: dotnet/lab/PerfLab.Api/PerfLab.Api.csproj
   healthPath: /health
   settings: { Feature__X: "true" }   # sin secretos ni claves reservadas (DOTNET_*, ASPNETCORE_*...)
 endpoints:                         # o endpointSource: openapi + include
   - { name: products, method: GET, path: /api/products/{id}, pathParameters: { id: "42" }, expectedStatus: 200 }
 dependencies:
-  pricing-api: { mode: mock, contract: lab/contracts/pricing.json, injectAs: Dependencies__Pricing__BaseUrl }
+  pricing-api: { mode: mock, contract: dotnet/lab/contracts/pricing.json, injectAs: Dependencies__Pricing__BaseUrl }
 load:
   smoke: { vus: 1, iterations: 10, maxDuration: 30s }
   baseline: { executor: constant-vus, vus: 10, duration: 30s }

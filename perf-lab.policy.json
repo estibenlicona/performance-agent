@@ -3,9 +3,9 @@
   // Los manifiestos (scenarios/*.yaml) nunca pueden superar estos límites. Ver docs/safety-policy.md.
   "schemaVersion": 1,
   // Añade aquí la ruta de tu API (relativa o absoluta) para diagnosticarla.
-  "allowedProjectRoots": [ "lab" ],
+  "allowedProjectRoots": [ "dotnet/lab" ],
   "allowedManifestRoots": [ "scenarios" ],
-  "allowedContractRoots": [ "lab/contracts", "contracts" ],
+  "allowedContractRoots": [ "dotnet/lab/contracts", "contracts" ],
   "load": {
     "maxVus": 50,
     "maxDurationSeconds": 240,

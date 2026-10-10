@@ -38,7 +38,7 @@ if (cliMode)
 
     if (args[0] == "schema")
     {
-        // Regenera schemas/run-manifest.v1.schema.json a partir de los tipos C#.
+        // Regenera scenarios/run-manifest.v1.schema.json a partir de los tipos C#.
         var path = Path.Combine(lab.Workspace.Root, PerfAgent.Core.Manifest.ManifestSchema.RelativePath);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         await File.WriteAllTextAsync(path, PerfAgent.Core.Manifest.ManifestSchema.Generate());

@@ -7,7 +7,7 @@ public sealed class PerfLabOptions
     /// <summary>Raíz del workspace. Si es null se usa PERFLAB_WORKSPACE o se busca perf-lab.policy.json hacia arriba.</summary>
     public string? WorkspaceRoot { get; set; }
 
-    public string MockServerProject { get; set; } = "src/PerfAgent.MockServer/PerfAgent.MockServer.csproj";
+    public string MockServerProject { get; set; } = "dotnet/src/PerfAgent.MockServer/PerfAgent.MockServer.csproj";
 
     /// <summary>Asignar el propio servidor a un Job Object (Windows) para que sus procesos hijos nunca queden huérfanos.</summary>
     public bool AssignServerToJobObject { get; set; } = true;

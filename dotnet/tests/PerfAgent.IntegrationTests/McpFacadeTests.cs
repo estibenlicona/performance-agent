@@ -24,7 +24,7 @@ public sealed class McpFacadeTests
 
     private static async Task<McpClient> StartServerAsync(CancellationToken cancellationToken)
     {
-        var dll = Path.Combine(Repo.Root, "src", "PerfAgent.Mcp", "bin", Repo.Configuration, "net10.0", "PerfAgent.Mcp.dll");
+        var dll = Path.Combine(Repo.Root, "dotnet", "src", "PerfAgent.Mcp", "bin", Repo.Configuration, "net10.0", "PerfAgent.Mcp.dll");
         if (!File.Exists(dll))
         {
             Assert.Skip($"No existe {dll}: compila la solución.");
