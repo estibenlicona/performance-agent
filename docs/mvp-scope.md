@@ -1,6 +1,6 @@
 # Alcance del MVP (Fase 1)
 
-Entregable del **Paso 1** del plan. Define qué hace perf-lab hoy, con qué límites y qué queda fuera.
+Entregable del **Paso 1** del plan. Define qué hace performance-agent hoy, con qué límites y qué queda fuera.
 
 ## Escenario soportado
 
@@ -9,7 +9,7 @@ Entregable del **Paso 1** del plan. Define qué hace perf-lab hoy, con qué lím
 - Compilación en **Release**; la API se ejecuta como `dotnet <ensamblado>.dll` (nunca `dotnet run`, para que el PID
   sea el de la aplicación) en un puerto libre de **127.0.0.1** asignado por el laboratorio.
 - Interfaz principal: **GitHub Copilot en VS Code (Agent Mode)** con el custom agent `Performance Diagnostics`, que
-  solo ve las herramientas `perf-lab/*`. El CLI (`PerfAgent.Mcp diagnose|report|status|schema`) es una utilidad de
+  solo ve las herramientas `performance-agent/*`. El CLI (`performance-agent diagnose|report|status|schema`) es una utilidad de
   pruebas.
 - Una ejecución activa a la vez.
 
@@ -23,7 +23,7 @@ Entregable del **Paso 1** del plan. Define qué hace perf-lab hoy, con qué lím
 | Windows 11 x64 | **Probado** |
 | Linux / macOS | No probado (el bootstrap solo instala binarios windows-amd64; la limpieza usa el registro de procesos en lugar de Job Objects) |
 
-## Límites por defecto (`perf-lab.policy.json`)
+## Límites por defecto (`safety-policy.json`)
 
 | Límite | Valor |
 |---|---|
@@ -33,7 +33,7 @@ Entregable del **Paso 1** del plan. Define qué hace perf-lab hoy, con qué lím
 | Endpoints por ejecución | ≤ 20 |
 | Destinos de carga | solo `127.0.0.1` (la instancia iniciada por el laboratorio; k6 bloquea cualquier otra IP o hostname) |
 | Métodos HTTP | `GET`, `HEAD` (escrituras denegadas) |
-| Proyectos | bajo `dotnet/lab/` (ampliable en `allowedProjectRoots`) |
+| Proyectos | solo las carpetas de `allowedProjectRoots` (vacío por defecto: se añade la de tu API) |
 | Manifiestos | bajo `scenarios/` |
 | Dependencias remotas | ninguna autorizada por defecto (`allowedRemoteDependencyHosts: []`) |
 | Capturas del runtime | counters, muestras de CPU, eventos (GC, ThreadPool, contención, excepciones), ≤ 60 s |

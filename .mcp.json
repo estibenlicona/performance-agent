@@ -1,20 +1,9 @@
 {
   "mcpServers": {
-    "perf-lab": {
+    "performance-agent": {
       "type": "stdio",
-      "command": "dotnet",
-      "args": [
-        "run",
-        "--project",
-        "dotnet/src/PerfAgent.Mcp/PerfAgent.Mcp.csproj",
-        "--configuration",
-        "Release",
-        "--no-launch-profile"
-      ],
-      "env": {
-        "DOTNET_NOLOGO": "1",
-        "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
-      },
+      "command": ".tools/performance-agent/0.1.0/performance-agent.exe",
+      "args": [],
       "tools": [
         "*"
       ],

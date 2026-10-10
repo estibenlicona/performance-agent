@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://perf-lab.local/schemas/run-manifest.v1.schema.json",
-  "title": "Manifiesto de ejecución perf-lab (v1)",
+  "$id": "https://performance-agent.local/schemas/run-manifest.v1.schema.json",
+  "title": "Manifiesto de ejecución performance-agent (v1)",
   "type": "object",
   "properties": {
     "schemaVersion": {
@@ -76,7 +76,7 @@
           ]
         },
         "settings": {
-          "description": "Configuración NO secreta para la instancia (variables de entorno, p. ej. Lab__Faults__Cpu).",
+          "description": "Configuración NO secreta para la instancia (variables de entorno, p. ej. Demo__Faults__Cpu).",
           "type": "object",
           "additionalProperties": {
             "type": "string"

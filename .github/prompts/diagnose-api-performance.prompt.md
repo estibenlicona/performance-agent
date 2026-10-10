@@ -1,11 +1,11 @@
 ---
 name: diagnose-api-performance
-description: Diagnosticar el rendimiento de una API .NET con el laboratorio perf-lab (preflight, smoke, carga, runtime, informe)
+description: Diagnosticar el rendimiento de una API .NET con el laboratorio performance-agent (preflight, smoke, carga, runtime, informe)
 agent: Performance Diagnostics
 argument-hint: scenarios/<manifiesto>.yaml
 ---
 
-Diagnostica el rendimiento con el manifiesto `${input:manifest:scenarios/lab-cpu.yaml}` siguiendo la skill
+Diagnostica el rendimiento con el manifiesto `${input:manifest:scenarios/my-api.yaml}` siguiendo la skill
 `dotnet-performance-diagnosis`:
 
 1. Comprueba el estado del laboratorio y valida el manifiesto; si algo bloquea, explícalo y detente.

@@ -1,0 +1,45 @@
+{
+  // Política de seguridad del laboratorio performance-agent (la aplica el servidor MCP, no el prompt del agente).
+  // Los manifiestos (scenarios/*.yaml) nunca pueden superar estos límites. Ver docs/safety-policy.md.
+  "schemaVersion": 1,
+  // Añade aquí la carpeta de tu API (ruta absoluta o relativa a este workspace) para poder diagnosticarla,
+  // p. ej. "C:/Repos/mi-api". Vacío por defecto: ninguna API está autorizada hasta que la añadas.
+  "allowedProjectRoots": [],
+  "allowedManifestRoots": [ "scenarios" ],
+  // Contratos de dependencias simuladas (mode: mock). Ver docs/mock-contracts.md.
+  "allowedContractRoots": [ "contracts" ],
+  "load": {
+    "maxVus": 50,
+    "maxDurationSeconds": 240,
+    "maxSmokeVus": 2,
+    "maxSmokeIterations": 50,
+    "maxEndpoints": 20
+  },
+  // En el MVP k6 solo puede generar tráfico hacia la instancia de laboratorio en loopback.
+  "allowedLoadTargetHosts": [ "127.0.0.1" ],
+  // Dependencias remotas autorizadas para el perfil local-hybrid (vacío por defecto). Admite "*.dominio".
+  "allowedRemoteDependencyHosts": [],
+  "deniedEnvironmentNames": [ "prod", "production", "prd", "live", "produccion", "producción" ],
+  "deniedHostTokens": [ "prod", "production", "prd", "live" ],
+  "allowedHttpMethods": [ "GET", "HEAD" ],
+  "writeOperations": "deny",
+  "supportedTargetFrameworks": [ "net10.0" ],
+  "allowUntestedFrameworks": false,
+  "diagnostics": {
+    "allowCounters": true,
+    "allowCpuSampling": true,
+    "allowEventCollection": true,
+    "allowDumps": false,
+    "allowHeapInspection": false,
+    "allowMethodParameterCapture": false,
+    "maxCaptureSeconds": 60
+  },
+  "timeouts": {
+    "buildSeconds": 300,
+    "startupSeconds": 90,
+    "k6GraceSeconds": 30,
+    "preflightCheckSeconds": 5,
+    "providerCallSeconds": 120
+  },
+  "artifactsRoot": "artifacts"
+}

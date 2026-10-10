@@ -1,6 +1,6 @@
 # Reglas de triage
 
-Implementadas en `dotnet/src/PerfAgent.Core/Triage/TriageEngine.cs` (umbrales en `TriageThresholds.cs`). Son heurísticas
+Implementadas en `performance-agent-server` (`dotnet/src/PerformanceAgent.Core/Triage/TriageEngine.cs`; umbrales en `TriageThresholds.cs`). Son heurísticas
 **interpretables**, no SLOs: deciden qué síntoma se observa, qué hipótesis abrir, qué evidencia la apoya o contradice
 y qué captura de seguimiento la discrimina. Cada hipótesis tiene estado:
 

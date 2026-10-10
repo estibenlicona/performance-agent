@@ -1,16 +1,16 @@
 # Proveedores comunitarios: contrato de integración
 
-Los proveedores se ejecutan como **procesos MCP secundarios** de `PerfAgent.Mcp`. El custom agent de Copilot **no**
-los ve: solo recibe `perf-lab/*`. Cada delegación queda registrada (proveedor, versión, herramienta, argumentos
+Los proveedores se ejecutan como **procesos MCP secundarios** de `performance-agent`. El custom agent de Copilot **no**
+los ve: solo recibe `performance-agent/*`. Cada delegación queda registrada (proveedor, versión, herramienta, argumentos
 saneados, duración, éxito, fallback) en `run.json` y en el informe ("Proveedores upstream invocados").
 
 ## Versiones fijadas
 
 | Proveedor | Versión | Licencia | Instalación | Verificación |
 |---|---|---|---|---|
-| [grafana/k6](https://github.com/grafana/k6) | 2.3.0 | AGPL-3.0 | `eng/bootstrap.ps1` → `.tools/k6/2.3.0/` | SHA-256 fijado en `eng/tools.json` **y** contrastado con `k6-v2.3.0-checksums.txt` |
-| [grafana/mcp-k6](https://github.com/grafana/mcp-k6) | 0.7.0 | AGPL-3.0 | `eng/bootstrap.ps1` → `.tools/mcp-k6/0.7.0/` | SHA-256 fijado + `mcp-k6_0.7.0_checksums.txt` |
-| [pedrosakuma/dotnet-diagnostics](https://github.com/pedrosakuma/dotnet-diagnostics) (`dotnet-diagnostics-mcp`) | 0.28.0 | MIT | herramienta .NET **local** (`.config/dotnet-tools.json`, `dotnet tool restore`) | `serverInfo.version` = 0.28.0 al conectar |
+| [grafana/k6](https://github.com/grafana/k6) | 2.3.0 | AGPL-3.0 | `setup/bootstrap.ps1` → `.tools/k6/2.3.0/` | SHA-256 fijado en `setup/tools.json` **y** contrastado con `k6-v2.3.0-checksums.txt` |
+| [grafana/mcp-k6](https://github.com/grafana/mcp-k6) | 0.7.0 | AGPL-3.0 | `setup/bootstrap.ps1` → `.tools/mcp-k6/0.7.0/` | SHA-256 fijado + `mcp-k6_0.7.0_checksums.txt` |
+| [pedrosakuma/dotnet-diagnostics](https://github.com/pedrosakuma/dotnet-diagnostics) (`dotnet-diagnostics-mcp`) | 0.28.0 | MIT | `setup/bootstrap.ps1` → `.tools/dotnet-diagnostics-mcp/0.28.0/` (ejecutable autocontenido, no requiere .NET) | SHA-256 fijado + digest del asset en el release de GitHub; `serverInfo.version` = 0.28.0 al conectar |
 
 > **Licencia AGPL-3.0 (k6, mcp-k6):** se usan sin modificar, como procesos independientes descargados de sus
 > releases oficiales; no se redistribuyen en este repositorio. Revísalo con tu área legal antes de distribuir
@@ -18,8 +18,9 @@ saneados, duración, éxito, fallback) en `run.json` y en el informe ("Proveedor
 
 Al arrancar, la fachada consulta el catálogo real (`tools/list`), comprueba que existen las herramientas requeridas
 y que la versión coincide con la fijada; si no, el proveedor queda **no disponible** con un error explicativo
-(`get_lab_status`). Actualizar una versión = cambiar `eng/tools.json`, `.config/dotnet-tools.json` y
-`dotnet/src/PerfAgent.Mcp/appsettings.json` (una prueba verifica que coinciden) y repetir las pruebas de integración.
+(`get_lab_status`). Las versiones esperadas viajan en el `appsettings.json` del paquete de performance-agent; actualizar una versión =
+cambiarla en `setup/tools.json` de este workspace y en `performance-agent-server` (una prueba verifica que su
+`appsettings.json` y su `setup/tools.json` coinciden), repetir allí las pruebas de integración y publicar el paquete.
 
 ## grafana/mcp-k6 0.7.0
 
@@ -31,7 +32,7 @@ Catálogo real (verificado con `tools/list`): `info`, `validate_script`, `run_sc
 `get_documentation`, `search_terraform`; recurso `docs://k6/best_practices`; prompts `generate_script`,
 `convert_playwright_script`. Resultados como JSON en texto (sin `structuredContent`).
 
-| Herramienta perf-lab | Delegación upstream | Controles previos |
+| Herramienta performance-agent | Delegación upstream | Controles previos |
 |---|---|---|
 | `validate_k6_scenario` | `validate_script(script)` — ejecuta 1 VU / 1 iteración | validación estática completa; destino = instancia de laboratorio |
 | `run_k6_test` | `run_script(script, vus, duration \| iterations)` (ramping-vus usa las opciones del script) | smoke previo, SHA-256, destino, límites, confirmación |
@@ -55,7 +56,7 @@ delegación como `fallback` con el motivo.
 
 ## pedrosakuma/dotnet-diagnostics 0.28.0
 
-Arranque: `dotnet tool run dotnet-diagnostics-mcp --stdio` en la raíz del workspace, con
+Arranque: `.tools/dotnet-diagnostics-mcp/0.28.0/dotnet-diagnostics-mcp.exe --stdio` en la raíz del workspace, con
 `MCP_ARTIFACT_ROOT=artifacts/providers/dotnet-diagnostics`. Siempre se pasa el `processId` de la API iniciada por la
 fachada (el proveedor también ve otros procesos .NET, incluida la propia fachada).
 
@@ -69,7 +70,7 @@ Catálogo real: 13 herramientas (`inspect_process`, `collect_events`, `collect_s
 `allocation`), `collect_batch` y `query_snapshot` (vistas `top-methods`, `hot-path`, `timeline`, `summary`…).
 Si una respuesta trae `safetyApproval` (riesgo alto/crítico), la fachada **la rechaza**.
 
-| Herramienta perf-lab | Delegación upstream |
+| Herramienta performance-agent | Delegación upstream |
 |---|---|
 | `run_k6_test` (baseline) | `inspect_process(view=info)` de calentamiento + `collect_batch[counters, gc, threadpool]` durante la carga + `query_snapshot(threadpool, timeline)` |
 | `inspect_runtime` | `inspect_process(view=preflight\|triage\|info\|capabilities)` |
@@ -98,6 +99,6 @@ diagnóstico a la vez.
 
 ## Pruebas de contrato
 
-`dotnet/tests/PerfAgent.IntegrationTests/ProviderContractTests.cs` arranca los proveedores fijados y verifica: catálogo y
+En `performance-agent-server`, `dotnet/tests/PerformanceAgent.IntegrationTests/ProviderContractTests.cs` arranca los proveedores fijados y verifica: catálogo y
 versión, parámetros y forma de las respuestas, errores, rechazo de herramientas fuera de la allowlist y que la
 fachada pasa el PID del proceso de laboratorio.

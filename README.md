@@ -1,18 +1,21 @@
-# perf-lab — agente de diagnóstico de rendimiento para APIs .NET
+# performance-agent — agente de diagnóstico de rendimiento para APIs .NET
 
-Laboratorio controlado para que **GitHub Copilot en VS Code** (agente `Performance Diagnostics`) diagnostique el
-rendimiento de APIs ASP.NET Core: descubre la API, la compila y arranca en local, ejecuta pruebas **k6** limitadas,
-recoge evidencia del **runtime .NET** en la misma ventana, formula hipótesis con evidencia a favor y en contra, ejecuta
-la investigación de seguimiento más barata que las discrimine y entrega un informe reproducible.
+Workspace para que **GitHub Copilot en VS Code** (agente `Performance Diagnostics`) diagnostique y ayude a mejorar el
+rendimiento de **cualquier API ASP.NET Core**: descubre la API, la compila y arranca en un laboratorio local aislado,
+ejecuta pruebas **k6** limitadas, recoge evidencia del **runtime .NET** en la misma ventana, formula hipótesis con
+evidencia a favor y en contra, ejecuta la investigación de seguimiento más barata que las discrimine y entrega un
+informe reproducible.
 
-Implementa la **Fase 1 (MVP)** de [`docs/plan.md`](docs/plan.md).
-Estado de la puerta MVP → Fase 2: [`docs/mvp-gate.md`](docs/mvp-gate.md).
+No necesitas un entorno de desarrollo para la herramienta: el servidor y los proveedores son ejecutables autocontenidos
+que `setup/bootstrap.ps1` instala en `.tools/`. Solo hace falta el SDK con el que se compila **tu** API.
+El código fuente del servidor está en el repositorio `performance-agent-server`.
 
 ## Cómo funciona
 
-- El agente solo ve las herramientas **`perf-lab/*`** de un servidor MCP propio (`dotnet/src/PerfAgent.Mcp`). Ese servidor
-  aplica la política de seguridad (`perf-lab.policy.json`) y delega en proveedores comunitarios fijados por versión,
-  que el agente no puede invocar directamente:
+- El agente solo ve las herramientas **`performance-agent/*`** de un servidor MCP propio
+  (`.tools/performance-agent/<versión>/performance-agent.exe`). Ese servidor aplica la política de seguridad
+  (`safety-policy.json`) y delega en proveedores comunitarios fijados por versión, que el agente no puede invocar
+  directamente:
   - [`grafana/mcp-k6`](https://github.com/grafana/mcp-k6) 0.7.0 + k6 2.3.0 — validación y ejecución de escenarios.
   - [`pedrosakuma/dotnet-diagnostics`](https://github.com/pedrosakuma/dotnet-diagnostics) 0.28.0 — counters, GC,
     ThreadPool, muestras de CPU y asignaciones del proceso de la API.
@@ -24,46 +27,43 @@ Estado de la puerta MVP → Fase 2: [`docs/mvp-gate.md`](docs/mvp-gate.md).
 ## Requisitos
 
 - Windows x64 (única plataforma probada; ver [`docs/tested-matrix.md`](docs/tested-matrix.md)).
-- .NET SDK 10.0.1xx o superior.
 - VS Code con GitHub Copilot (Agent Mode).
+- El SDK de .NET que necesite tu API para compilarse. Hoy la política solo admite APIs `net10.0`, la única versión
+  probada; otras se habilitarán en `supportedTargetFrameworks` cuando se validen.
 
 ## Puesta en marcha
 
 ```powershell
-# 1. Herramientas fijadas (k6, mcp-k6 con verificación SHA-256; dotnet-diagnostics-mcp como herramienta local)
-powershell -ExecutionPolicy Bypass -File eng/bootstrap.ps1
-
-# 2. Compilar y probar
-dotnet build dotnet/PerfAgent.slnx
-dotnet test dotnet/tests/PerfAgent.UnitTests
-dotnet test dotnet/tests/PerfAgent.IntegrationTests      # proveedores reales y escenarios E2E (≈7 min)
+# Instala el servidor y los proveedores fijados (verificación SHA-256) y comprueba la configuración del workspace
+powershell -ExecutionPolicy Bypass -File setup/bootstrap.ps1
 ```
 
-3. Abre la carpeta en VS Code. El servidor `perf-lab` está declarado en [`.mcp.json`](.mcp.json); confía en el
-   workspace e inicia el servidor cuando VS Code lo proponga.
-4. En Copilot Chat elige el agente **Performance Diagnostics** y pide, por ejemplo:
-   *"Diagnostica scenarios/lab-cpu.yaml"* o usa el prompt `/diagnose-api-performance`.
+Mientras no haya releases publicados, el paquete del servidor se toma de
+`../performance-agent-server/artifacts/release/` (se genera allí con `setup/publish.ps1`).
+
+## Diagnosticar tu API
+
+1. Añade la carpeta de tu API a `allowedProjectRoots` en `safety-policy.json` (ruta absoluta o relativa).
+2. Copia `scenarios/my-api.example.yaml` (p. ej. a `scenarios/my-api.yaml`) y cambia `api.project`. Guía:
+   [`docs/manifest.md`](docs/manifest.md). Declara endpoints con datos sintéticos si no hay OpenAPI, y cada dependencia
+   con su modo (`mock` con un contrato en `contracts/`, `container` o `remote`).
+3. Abre esta carpeta en VS Code; el servidor `performance-agent` está declarado en [`.mcp.json`](.mcp.json). Confía en
+   el workspace e inicia el servidor cuando VS Code lo proponga.
+4. En Copilot Chat elige el agente **Performance Diagnostics** y pide *"Diagnostica scenarios/my-api.yaml"*, o usa el
+   prompt `/diagnose-api-performance`. Los secretos se configuran fuera del repositorio (user-secrets/entorno).
 
 Sin Copilot (utilidad de pruebas):
 
 ```powershell
-dotnet run --project dotnet/src/PerfAgent.Mcp -- status
-dotnet run --project dotnet/src/PerfAgent.Mcp -- diagnose scenarios/lab-blocking.yaml
-dotnet run --project dotnet/src/PerfAgent.Mcp -- report <runId>      # recalcula el informe desde los artefactos
+.tools/performance-agent/0.1.0/performance-agent.exe status
+.tools/performance-agent/0.1.0/performance-agent.exe diagnose scenarios/my-api.yaml
+.tools/performance-agent/0.1.0/performance-agent.exe report <runId>      # recalcula el informe desde los artefactos
 ```
 
 Los resultados quedan en `artifacts/runs/<runId>/` (`report.md`, `report.json`, `run.json`, scripts k6, respuestas
 saneadas de los proveedores y logs).
 
-## Diagnosticar tu propia API
-
-1. Añade la ruta del proyecto a `allowedProjectRoots` en `perf-lab.policy.json`.
-2. Crea un manifiesto en `scenarios/` (guía: [`docs/manifest.md`](docs/manifest.md); esquema:
-   `scenarios/run-manifest.v1.schema.json`). Declara endpoints con datos sintéticos si no hay OpenAPI y cada dependencia
-   con su modo (`mock`, `container`, `remote`).
-3. Pide al agente que lo valide y ejecute. Los secretos se configuran fuera del repositorio (user-secrets/entorno).
-
-## Herramientas `perf-lab/*`
+## Herramientas `performance-agent/*`
 
 | Herramienta | Uso |
 |---|---|
@@ -80,16 +80,13 @@ saneadas de los proveedores y logs).
 ## Estructura
 
 ```text
+safety-policy.json        límites de seguridad y carpetas permitidas (aquí se añade tu API)
+.mcp.json                 servidor MCP del workspace (solo performance-agent)
 .github/                  agente, instrucciones, skill y prompt de Copilot
-.mcp.json                 servidor MCP del workspace (solo perf-lab)
-perf-lab.policy.json      límites de seguridad
-eng/                      bootstrap y versiones fijadas (tools.json)
-dotnet/                   todo el código .NET: PerfAgent.slnx, Directory.Build.props, Directory.Packages.props
-  src/PerfAgent.*         Core, Mcp (fachada), Adapters (Process, K6Mcp, DotNetDiagnosticsMcp), Reporting, MockServer
-  lab/                    API de laboratorio con fallos conocidos, contratos de mocks, docker-compose (no probado)
-  tests/                  pruebas unitarias e integración
-scenarios/                manifiestos de ejemplo y su JSON Schema
-docs/                     plan, alcance, política, arquitectura, proveedores, reglas, ADRs, puerta MVP
+scenarios/                tus manifiestos, la plantilla my-api.example.yaml y el JSON Schema
+setup/                    bootstrap.ps1 (instalación), verify.ps1 (comprobación), tools.json (versiones fijadas)
+docs/                     manifiestos, política, contratos de mocks, reglas de triage, proveedores, alcance, matriz probada
+.tools/, artifacts/       instalados y generados (no se versionan)
 ```
 
 ## Licencias de terceros

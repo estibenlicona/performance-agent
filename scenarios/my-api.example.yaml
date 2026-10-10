@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=./run-manifest.v1.schema.json
+# Plantilla para diagnosticar tu API: cópiala (p. ej. scenarios/my-api.yaml), cambia api.project y añade la carpeta
+# de tu API a allowedProjectRoots en safety-policy.json. Guía completa: docs/manifest.md.
+schemaVersion: 1
+name: my-api-baseline
+description: Línea base de mi API; endpoints descubiertos por OpenAPI (solo GET/HEAD; las escrituras se excluyen).
+profile: local-isolated
+environment: lab
+
+api:
+  project: C:/Repos/my-api/src/MyApi/MyApi.csproj
+  configuration: Release
+  aspNetCoreEnvironment: Development
+  healthPath: /health
+  openApiPath: /openapi/v1.json
+  readinessTimeoutSeconds: 60
+
+load:
+  engine: k6
+  endpointSource: openapi
+  smoke:
+    vus: 1
+    iterations: 8
+    maxDuration: 30s
+  baseline:
+    executor: constant-vus
+    vus: 8
+    duration: 20s
+  thresholds:
+    http_req_failed: ['rate<0.01']
+    http_req_duration: ['p(95)<500']
+
+diagnostics:
+  runtimeCounters: true
+  counterIntervalSeconds: 1
+  cpuTrace: on-demand
+  memoryDump: disabled
+
+safety:
+  productionTargets: deny
+  writeOperations: deny
+  secretsInModelContext: deny

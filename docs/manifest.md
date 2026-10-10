@@ -1,7 +1,7 @@
 # Manifiestos de ejecución (`scenarios/*.yaml`)
 
-Esquema versionado: `scenarios/run-manifest.v1.schema.json` (generado desde `dotnet/src/PerfAgent.Core/Manifest/RunManifest.cs`
-con `dotnet run --project dotnet/src/PerfAgent.Mcp -- schema`; una prueba verifica que está al día). En VS Code, la línea
+Esquema versionado: `scenarios/run-manifest.v1.schema.json`. Lo genera el servidor instalado (`performance-agent schema`)
+y `setup/bootstrap.ps1` lo actualiza al instalar una versión nueva. En VS Code, la línea
 `# yaml-language-server: $schema=./run-manifest.v1.schema.json` activa autocompletado y validación.
 
 La carga es **estricta**: un campo desconocido o mal escrito es un error, no se ignora.
@@ -28,6 +28,6 @@ La carga es **estricta**: un campo desconocido o mal escrito es un error, no se 
 
 ## Ejemplos
 
-- `scenarios/local-baseline.yaml` — control sano (OpenAPI).
-- `scenarios/lab-*.yaml` — un fallo conocido por escenario (ver `docs/lab-scenarios.md`).
-- `scenarios/local-hybrid.example.yaml` — dependencia remota real + mock; requiere autorizar el host en la política.
+- `scenarios/my-api.example.yaml` — plantilla para tu API: línea base con endpoints descubiertos por OpenAPI.
+- `performance-agent-server/scenarios/` — escenarios de la API de ejemplo con fallos conocidos (CPU, asignaciones,
+  bloqueo, N+1, errores de dependencia) y un perfil `local-hybrid` con dependencia remota real + mock.

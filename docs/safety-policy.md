@@ -1,13 +1,13 @@
 # Política de seguridad del laboratorio
 
-Entregable del **Paso 1**. Los controles se aplican en el **servidor** `perf-lab` (código en
-`dotnet/src/PerfAgent.Core/Policy`, `dotnet/src/PerfAgent.Adapters.*` y `dotnet/src/PerfAgent.Mcp/Lab`). Las instrucciones del agente
+Entregable del **Paso 1**. Los controles se aplican en el **servidor** `performance-agent` (código en
+`performance-agent-server`: `PerformanceAgent.Core/Policy`, `PerformanceAgent.{K6,Diagnostics,Launcher}` y `PerformanceAgent.Mcp/Lab`). Las instrucciones del agente
 los describen, pero **no son un control de seguridad**: aunque el modelo intentara saltárselos, las herramientas
 rechazan la operación y explican por qué (`status: blocked`, `violations[]` con código estable).
 
 ## Fuente de los límites
 
-`perf-lab.policy.json` (versionado, en la raíz). El manifiesto solo puede **restringir**, nunca ampliar. Si el
+`safety-policy.json` (versionado, en la raíz). El manifiesto solo puede **restringir**, nunca ampliar. Si el
 archivo falta se aplican valores por defecto equivalentes y restrictivos. Campos desconocidos → error.
 
 ## Controles
@@ -16,7 +16,7 @@ archivo falta se aplican valores por defecto equivalentes y restrictivos. Campos
 |---|---|---|
 | Carga contra producción o destinos arbitrarios | La URL base la fija el laboratorio (instancia propia en `127.0.0.1:<puerto libre>`); el script generado incluye `blacklistIPs` (todo IPv4 salvo 127.0.0.0/8 y todo IPv6) y `blockHostnames: ['*']`, verificado en k6 2.3.0; la validación estática rechaza cualquier URL distinta | `K6ScriptGenerator`, `K6ScriptValidator`, `PolicyEngine.EvaluateLoadTarget` |
 | Ambientes de producción | Etiquetas `prod/production/prd/live` (y variantes) rechazadas en `environment`, `aspNetCoreEnvironment` y en hosts de dependencias remotas | `PolicyEngine` |
-| Scripts arbitrarios del modelo | Solo se ejecutan scripts **generados** por perf-lab, fijados por SHA-256; cualquier modificación se detecta (`k6.tampered`). Imports limitados a `k6`, `k6/http`, `k6/metrics`; se rechazan `open(`, `require(`, `eval(`, extensiones `k6/x/`, etc. | `K6ScriptValidator` |
+| Scripts arbitrarios del modelo | Solo se ejecutan scripts **generados** por performance-agent, fijados por SHA-256; cualquier modificación se detecta (`k6.tampered`). Imports limitados a `k6`, `k6/http`, `k6/metrics`; se rechazan `open(`, `require(`, `eval(`, extensiones `k6/x/`, etc. | `K6ScriptValidator` |
 | Inyección en el script | Los datos del manifiesto se embeben como literales JSON escapados; thresholds validados con una gramática estricta | `K6ScriptGenerator.ToJs`, `PolicyEngine.IsValidThreshold` |
 | Exceso de carga | VUs, duración, iteraciones y nº de endpoints validados al validar el manifiesto **y** otra vez justo antes de ejecutar | `PolicyEngine.EvaluateLoad` |
 | Saltarse pasos | El baseline exige un smoke funcionalmente correcto; la carga exige laboratorio activo, manifiesto sin cambios (SHA-256) y escenario validado | `LabService` |
@@ -40,7 +40,7 @@ VS Code pide aprobación para las herramientas MCP que no son de solo lectura.
 
 ## Ampliar la política
 
-1. Añadir la ruta del proyecto a `allowedProjectRoots` (relativa o absoluta).
+1. Añadir la carpeta de tu API a `allowedProjectRoots` (absoluta o relativa a este workspace). Está vacío por defecto.
 2. Para dependencias reales: perfil `local-hybrid` y el host en `allowedRemoteDependencyHosts`.
 3. Para otro framework: añadirlo a `supportedTargetFrameworks` **después** de probarlo y registrarlo en
    `docs/tested-matrix.md`.
